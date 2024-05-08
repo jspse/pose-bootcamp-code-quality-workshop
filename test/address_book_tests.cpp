@@ -25,8 +25,15 @@ TEST_CASE("entry names are case-insensitive") {
 TEST_CASE("entry names are are between 1 and 100 characters long") {
 	address_book ab;
 	CHECK_THROWS(ab.add_entry(""));
-	std::string length101 (101, 'x');
-	CHECK_THROWS(ab.add_entry(length101));
+	std::string name(101,'a');
+	CHECK_THROWS(ab.add_entry(name));
+
+	name = std::string(100,'a');
+	ab.add_entry(name);
+	CHECK(ab.has_entry(name));
+
+	ab.add_entry("a");
+	CHECK(ab.has_entry("a"));
 }
 
 TEST_CASE("entries are sorted alphabetically") {
@@ -35,6 +42,7 @@ TEST_CASE("entries are sorted alphabetically") {
 	ab.add_entry("Zoe Doe");
 	ab.add_entry("Anne Doe");
 	auto entries = ab.get_entries();
+	REQUIRE(entries.size()==3);
 
 	CHECK(entries[0] == "Anne Doe");
 	CHECK(entries[1] == "Jane Doe");
